@@ -1,64 +1,86 @@
 #include <stdio.h>
 #include <stdlib.h>
-define len sizeof(num)
-struct num
+#define len sizeof(struct student)
+struct student
 {
-    int a;
-    struct num *next;
+   int num;
+   struct student *next;
 };
-struct num *creat()
+struct student *creat(int a,struct student *head)
 {
-    struct num *head;
-    struct num *p1,*p2;
-    p1=p2=(struct num*)malloc(len);
-    n=0;
+    int n=0;
+    struct student *p1,*p2;
+    p1=p2=(struct student*) malloc (len);
+    scanf("%d",&p1->num);
     head=NULL;
-    scanf("%d",&p1->a);
-    while(p1->a>=0&&n<=3)
+    while(p1->num!=0&&n<=a)
     {
         n+=1;
         if(n==1)
-          head=p1;
+         head=p1;
         else
-          p->next=p1;
+         p2->next=p1;
         p2=p1;
-        p1=(struct num*)malloc(len);
-        scanf("%d",&p1->a);
+        p1=(struct student*) malloc (len);
+        scanf("%d",&p1->num);
     }
-    return(head);
+    p2->next=NULL;
+   return(head);
 }
-struct num *add(struct num *a,struct num *b)
+void print(struct student *head)
 {
-    struct num *head,*p1,*p2;
-    p1=a;
-    p2=b;
-    n=0;
-    while(p1->next!=NULL&&p1->next!=NULL)
+    struct student *p;
+    p=head;
+    if(head!=NULL)
     {
-        p1++;
-        p2++;
+        do
+        {
+            printf("%d ",p->num);
+            p=p->next;
+        }while(p!=NULL);
+        printf("\n");
     }
-    while(p1->a!=0&&p2->a!=0)
-    {
-        n+=1;
-        if(n==1)
-        {if(p1->a>=p2->a)
-            head=p1;
-        else
-            head
-        }
-
-         else if(p1->a>=p2->a)
-         {
-
-         }
-    }
-    return (head);
+}
+struct student *fun(struct student *la,struct student *lb)
+{
+    struct student *p1,*p2,*p3;
+    struct student *head;
+    p1=la;
+    p2=lb;
+    if(p1->num<p2->num)
+      {head=p1;p3=p1;p1=p1->next;}
+    else
+      {head=p2;p3=p2;p2=p2->next;}
+    while(p1!=NULL&&p2!=NULL)
+    if(p1->num<p2->num)
+      {
+         p3->next=p1;
+         p1=p1->next;
+         p3=p3->next;
+      }
+      else
+      {
+         p3->next=p2;
+         p2=p2->next;
+         p3=p3->next;
+      }
+     if(p1==NULL&&p2!=NULL)
+     {
+         p3->next=p2;
+     }
+     else if(p1!=NULL&&p2==NULL)
+     {
+         p3->next=p1;
+     }
+     return(head);
 }
 int main()
 {
-    struct num *a1,*a2,*a3;
-    a1=creat();
-    a2=creat();
-    a3=add(a1,a2);
+   struct student *la,*lb;
+   la=creat(4,la);
+   print(la);
+   lb=creat(6,lb);
+   print(lb);
+   print(fun(la,lb));
+   printf("\n");
 }
