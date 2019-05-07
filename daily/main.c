@@ -1,93 +1,63 @@
 #include <stdio.h>
 #include <stdlib.h>
-#pragma warning(disable:4996)
-
-typedef struct _node {
-	int value;
-	struct _node * next;
-}Node , * NodePoint , * List;
-
-List Creat(int length) {
-	NodePoint ListHead = NULL;
-	NodePoint * Local=&ListHead;
-	while (length--) {
-		*Local = (NodePoint)malloc(sizeof(Node));
-		scanf("%d" , &(*Local)->value);
-		Local = &(*Local)->next;
-	}
-	*Local = NULL;
-	return ListHead;
+struct tree
+{
+    int weight;
+    int rchild,lchild,parent;
+};
+void select(struct tree* p, int n,int *s1,int *s2)
+{
+    int i=0, key = 0, t;
+    *s1 = *s2 = 0;
+    for (i = 0; i < n ; i++)
+    {
+        if (p[i].parent == 0 && key == 0)
+        {
+            key++;
+            *s1 = i;
+            continue;
+        }
+        if (p[i].parent == 0 && key == 1)
+        {
+            key++;
+            *s2 = i;
+        }
+        if (key == 2 && p[i].parent == 0)
+        {
+            if (p[*s1].weight > p[*s2].weight)
+            {
+                t = *s1; *s1 = *s2; *s2 = t;
+            }
+            if (p[i].weight < p[*s2].weight)
+                *s2 = i;
+            if (p[*s1].weight > p[*s2].weight)
+            {
+                t = *s1; *s1 = *s2; *s2 = t;
+            }
+        }
+    }
 }
-
-void Reverse(List * list) {
-	NodePoint Iter_list = (*list)->next;
-	NodePoint New_Head = *list;
-	while (Iter_list != NULL) {
-		NodePoint temp = Iter_list->next;
-		(*list)->next = Iter_list->next;
-		Iter_list->next = New_Head;
-		New_Head = Iter_list;
-		Iter_list = temp;
-	}
-	*list = New_Head;
+void create(struct tree *a,int n)
+{
+    int i=0,s1,s2;
+    for (i = 0; i < n ; i++)
+        scanf ("%d",&a[i].weight);
+    for (i =0; i < 17; i++)
+        a[i].rchild = a[i].lchild = a[i].parent = 0;
+    for (i = n; i < 2 * n - 1; i++)
+    {
+        select (a,i,&s1,&s2);
+        a[i].lchild = s1;a[i].rchild = s2;
+        a[i].weight = a[s1].weight + a[s2].weight;
+        a[s1].parent = a[s2].parent = i;
+    }
 }
-
-
-
-
-void PrintList(List list) {
-	while (list != NULL) {
-		printf("%d " , list->value);
-		list = list->next;
-	}
-	printf("\n");
-}
-
-
-void Merge(List * list1 , List * list2) {
-	//先逆置链表1
-	Reverse(list1);
-
-	/*
-	依次遍历链表2,插入到相应位置
-	(简单思维,因为如果已知链表2是递增的,逆置链表2后可以不重置Iter_list1的值,减少循环次数)
-	*/
-	NodePoint Iter_list2 = *list2;
-	while (Iter_list2 != NULL) {
-		NodePoint Iter_list1 = *list1;
-		NodePoint Last = NULL;
-		while (Iter_list1 != NULL) {
-			if (Iter_list2->value < Iter_list1->value) {
-				Last = Iter_list1;
-				Iter_list1 = Iter_list1->next;
-			}
-			else {
-				NodePoint temp = Iter_list2->next;
-				if (Last == NULL) {
-					Iter_list2->next = Iter_list1;
-					(*list1) = Iter_list2;
-				}
-				else {
-					Iter_list2->next = Iter_list1;
-					Last->next = Iter_list2;
-				}
-				Iter_list2 = temp;
-				break;
-			}
-		}
-	}
-	*list2 = NULL;
-
-}
-int main() {
-	freopen("in.txt" , "r" , stdin);
-	//freopen("out.txt" , "w" , stdout);
-	List t1 , t2;
-	t1 = Creat(4);
-	PrintList(t1);
-	t2 = Creat(4);
-	PrintList(t2);
-	Merge(&t1 , &t2);
-	PrintList(t1);
-	return 0;
+int main()
+{
+    int n ;
+    scanf("%d",&n);
+    struct tree a[17];
+    create(a,n);
+    printf("%d",a[2 * n - 2].weight);
+    return 0;
 }
