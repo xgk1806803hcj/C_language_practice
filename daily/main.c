@@ -1,63 +1,79 @@
 #include <stdio.h>
 #include <stdlib.h>
-struct tree
+#define maxint 32767
+#define mvnum 100
+
+typedef struct arcnode
 {
-    int weight;
-    int rchild,lchild,parent;
-};
-void select(struct tree* p, int n,int *s1,int *s2)
+   int adjvex;
+   struct arcnode *nextarc;
+}arcnode;
+
+typedef struct vnode
 {
-    int i=0, key = 0, t;
-    *s1 = *s2 = 0;
-    for (i = 0; i < n ; i++)
+    int data;
+    arcnode *startarc;
+}vnode,nodelist[mvnum];
+
+typedef struct
+{
+    nodelist ast;
+    int vexnum,arcnum;
+}algraph;
+
+void createudg(algraph *g)
+{
+    int i,k;
+    scanf("%d%d",&g->vexnum,&g->arcnum);
+    for(i=0;i<g->vexnum;i++)
     {
-        if (p[i].parent == 0 && key == 0)
-        {
-            key++;
-            *s1 = i;
-            continue;
-        }
-        if (p[i].parent == 0 && key == 1)
-        {
-            key++;
-            *s2 = i;
-        }
-        if (key == 2 && p[i].parent == 0)
-        {
-            if (p[*s1].weight > p[*s2].weight)
-            {
-                t = *s1; *s1 = *s2; *s2 = t;
-            }
-            if (p[i].weight < p[*s2].weight)
-                *s2 = i;
-            if (p[*s1].weight > p[*s2].weight)
-            {
-                t = *s1; *s1 = *s2; *s2 = t;
-            }
-        }
+        scanf("%d",&g->ast[i].data);
+        g->ast[i].startarc=NULL;
+    }
+    for(k=0;k<g->arcnum;k++)
+    {
+        arcnode *p1,*p2;
+        int n1,n2;
+        scanf("%d%d",&n1,&n2);
+        p1=(arcnode *)malloc(sizeof(arcnode));
+        p1->adjvex=n2;
+        p1->nextarc=g->ast[i].startarc;g->ast[i].startarc=p1;
+        p2=(arcnode *)malloc(sizeof(arcnode));
+        p2->adjvex=n1;
+        p2->nextarc=g->ast[i].startarc;g->ast[i].startarc=p2;
     }
 }
-void create(struct tree *a,int n)
+
+void DFS(algraph *g,int v)
 {
-    int i=0,s1,s2;
-    for (i = 0; i < n ; i++)
-        scanf ("%d",&a[i].weight);
-    for (i =0; i < 17; i++)
-        a[i].rchild = a[i].lchild = a[i].parent = 0;
-    for (i = n; i < 2 * n - 1; i++)
+    int i,w;
+    int a[(g->vexnum)+1];
+    for(i=1;i<=g->vexnum;i++)
+        a[i]=0;
+    arcnode *p;
+    p=g->ast[v].startarc;
+    while(p!=NULL)
     {
-        select (a,i,&s1,&s2);
-        a[i].lchild = s1;a[i].rchild = s2;
-        a[i].weight = a[s1].weight + a[s2].weight;
-        a[s1].parent = a[s2].parent = i;
+        a[v]=1;
+        w=p->adjvex;
+        if(!a[w])
+            DFS(g,w);
+        p=p->nextarc;
     }
 }
+
+void BFS(algraph *g,int v)
+{
+    int i;
+    int a[(g->vexnum)+1];
+
+}
+
+
 int main()
 {
-    int n ;
-    scanf("%d",&n);
-    struct tree a[17];
-    create(a,n);
-    printf("%d",a[2 * n - 2].weight);
+    algraph g;
+    createudg(&g);
+    DFS(&g,2);
     return 0;
 }
