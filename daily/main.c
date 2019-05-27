@@ -1,79 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define maxint 32767
-#define mvnum 100
 
-typedef struct arcnode
+typedef struct node
 {
-   int adjvex;
-   struct arcnode *nextarc;
-}arcnode;
+    struct node *next;
+}node;
 
-typedef struct vnode
+void creatlist(struct node *a[],int b[])
 {
-    int data;
-    arcnode *startarc;
-}vnode,nodelist[mvnum];
-
-typedef struct
-{
-    nodelist ast;
-    int vexnum,arcnum;
-}algraph;
-
-void createudg(algraph *g)
-{
-    int i,k;
-    scanf("%d%d",&g->vexnum,&g->arcnum);
-    for(i=0;i<g->vexnum;i++)
+    node *p1,*p2;
+    int k=0;
+    while(b[k])
     {
-        scanf("%d",&g->ast[i].data);
-        g->ast[i].startarc=NULL;
-    }
-    for(k=0;k<g->arcnum;k++)
-    {
-        arcnode *p1,*p2;
-        int n1,n2;
-        scanf("%d%d",&n1,&n2);
-        p1=(arcnode *)malloc(sizeof(arcnode));
-        p1->adjvex=n2;
-        p1->nextarc=g->ast[i].startarc;g->ast[i].startarc=p1;
-        p2=(arcnode *)malloc(sizeof(arcnode));
-        p2->adjvex=n1;
-        p2->nextarc=g->ast[i].startarc;g->ast[i].startarc=p2;
+        p1=(node *)malloc(sizeof(node));
+        p1->next=NULL;
+        p2=a[b[k]%10];
+        while(p2->next!=NULL)
+            p2=p2->next;
+        p2->next=p1;
     }
 }
-
-void DFS(algraph *g,int v)
-{
-    int i,w;
-    int a[(g->vexnum)+1];
-    for(i=1;i<=g->vexnum;i++)
-        a[i]=0;
-    arcnode *p;
-    p=g->ast[v].startarc;
-    while(p!=NULL)
-    {
-        a[v]=1;
-        w=p->adjvex;
-        if(!a[w])
-            DFS(g,w);
-        p=p->nextarc;
-    }
-}
-
-void BFS(algraph *g,int v)
-{
-    int i;
-    int a[(g->vexnum)+1];
-
-}
-
 
 int main()
 {
-    algraph g;
-    createudg(&g);
-    DFS(&g,2);
+    int b[10],j=0,flag,i,k;
+    node a[13];
+    for(i=2;j<10;i++)
+    {
+        while(flag==1&&k<i)
+        {
+            if(i%k==0)
+                flag=0;
+            k++;
+        }
+        if(flag==1)
+            b[j++]=i;
+    }
+    creatlist(&a[13],b[10]);
     return 0;
 }
