@@ -3,39 +3,78 @@
 
 typedef struct node
 {
-    struct node *next;
+    int key;
+    int length;
 }node;
 
-void creatlist(struct node *a[],int b[])
+void selectsort(node *a[])//shunxu
 {
-    node *p1,*p2;
-    int k=0;
-    while(b[k])
+    int i,s,j;
+    for(i=2;i<a[0]->length;i++)
     {
-        p1=(node *)malloc(sizeof(node));
-        p1->next=NULL;
-        p2=a[b[k]%10];
-        while(p2->next!=NULL)
-            p2=p2->next;
-        p2->next=p1;
+        if(a[i]->key>a[i-1]->key)
+            continue;
+        else
+        {
+            a[0]->key=a[i]->key;
+            for(j=1;j<i;j++)
+            {
+                if(a[0]->key<a[j]->key)
+                    {
+                        for(s=i;s>=j;s--)
+                        a[i]->key=a[i-1]->key;
+                        a[j]->key=a[0]->key;
+                    }
+            }
+        }
     }
 }
 
+void binsersort(node *a[])//zheban
+{
+    int i,m,j,high,low;
+    for(i=2;i<a[0]->length;i++)
+    {
+        a[0]->key=a[i]->key;
+        low=1;
+        high=i-1;
+
+        while(low<=high)
+        {
+            m=(low+high)/2;
+            if(a[0]->key<a[m]->key)
+                high=m-1;
+            else
+                low=m+1;
+        }
+        for(j=i-1;j>high+1;j--)
+            a[j+1]->key=a[j]->key;
+        a[high+1]->key=a[0]->key;
+    }
+}
+/*
+void shellinsert(node *a[],int dk)
+{
+    int i,j,s;
+    for(i=dk+1;i<a[0]->length;i++)
+        if(a[i]->key<a[i-dk]->key)
+        {
+            a[0]->key=s[i]->key;
+            for(j=i-dk;j>0&&a[0]->key<a[j]->key;j-=dk)
+                a[j+dk]->key=a[j]->key;
+            a[j+dk]->key=a[0]->key;
+        }
+}
+*/
 int main()
 {
-    int b[10],j=0,flag,i,k;
-    node a[13];
-    for(i=2;j<10;i++)
-    {
-        while(flag==1&&k<i)
-        {
-            if(i%k==0)
-                flag=0;
-            k++;
-        }
-        if(flag==1)
-            b[j++]=i;
-    }
-    creatlist(&a[13],b[10]);
+    int i;
+    node a[11];
+    for(i=1;i<11;i++)
+        scanf("%d%d",&a[i].key,&a[i].length);
+    selectsort(&a);
+    for(i=1;i<11;i++)
+        printf("%d ",a[i].key);
+    printf("Hello world!\n");
     return 0;
 }
